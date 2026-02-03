@@ -1,22 +1,29 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
+provider "aws" {
+  region = "us-east-1" 
+}
+
+# 1. Creamos el Bucket de S3 (El almacén)
+resource "aws_s3_bucket" "datos_portfolio" {
+  bucket = "portfolio-storage-mathias-2026" # Debe ser un nombre único en todo el mundo
+}
+
+# 2. Tu Servidor EC2 con Instalación Automática
+resource "aws_instance" "servidor_web" {
+  ami           = "ami-0c101f26f147fa7fd" # Amazon Linux 2023
+  instance_type = "t3.micro"
+  iam_instance_profile = "Role-CloudManager-Proyecto" # El rol que ya creaste
+
+  # Esto instala Nginx automáticamente al encenderse
+  user_data = <<-EOF
+              #!/bin/bash
+              dnf update -y
+              dnf install -y nginx
+              systemctl start nginx
+              systemctl enable nginx
+              echo "<h1>Servidor Cloud de Mathias - Sistema de Archivos Activo</h1>" > /usr/share/nginx/html/index.html
+              EOF
+
+  tags = {
+    Name = "EC2-Portfolio-Server"
   }
 }
-
-provider "aws" {
-  region = "us-east-1"
-}
-
-# Esto solo lee la información de mi servidor actual
-data "aws_instance" "mi_servidor" {
-  instance_id = "i-0fa18c3062c6a3472"
-}
-
-output "estado_servidor" {
-  value = data.aws_instance.mi_servidor.instance_state
-}
-

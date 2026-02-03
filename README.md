@@ -1,4 +1,3 @@
-# aws-portfolio-project
 # Cloud Infrastructure Management
 
 Este repositorio contiene la arquitectura base para el proyecto **Antigravity**, enfocada en la gestión segura de recursos en AWS mediante Infraestructura como Código (IaC). 

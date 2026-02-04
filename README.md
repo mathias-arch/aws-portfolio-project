@@ -4,6 +4,7 @@
 [![Terraform Version](https://img.shields.io/badge/Terraform-1.5.0+-623CE4.svg?style=flat&logo=terraform)](https://www.terraform.io/)
 [![AWS Architecture](https://img.shields.io/badge/AWS-Architecture-FF9900.svg?style=flat&logo=amazon-aws)](https://aws.amazon.com/)
 [![CI/CD Status](https://img.shields.io/badge/GitHub%20Actions-Automated-2088FF.svg?style=flat&logo=github-actions)](https://github.com/features/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat&logo=opensourceinitiative&logoColor=white)](https://opensource.org/licenses/MIT)
 
 ### Descripción del Proyecto
 
@@ -11,6 +12,7 @@ Este proyecto representa el despliegue de una arquitectura web profesional en **
 
 La solución utiliza **Terraform** para definir los recursos y **GitHub Actions** para el despliegue continuo (CD), garantizando que la infraestructura sea replicable, auditable y eficiente en costes.
 
+---
 ## Índice
 * [Descripción del Proyecto](#-descripción-del-proyecto)
 * [Objetivos del Proyecto](#-objetivos-del-proyecto)
@@ -18,13 +20,6 @@ La solución utiliza **Terraform** para definir los recursos y **GitHub Actions*
 * [Arquitectura del Sistema](#-arquitectura-del-sistema)
 * [Desafíos Técnicos y Soluciones](#-desafíos-técnicos-y-soluciones)
 * [Conclusiones y Aprendizajes](#-conclusiones-y-aprendizajes)
-
----
-
-## Descripción del Proyecto
-Este proyecto despliega automáticamente un entorno de servidor web **Nginx** sobre instancias **EC2**, conectado de forma nativa a un **Bucket S3** para persistencia de datos. 
-
-Toda la infraestructura se gestiona como código, lo que permite despliegues predecibles, repetibles y optimizados para el control de costes dentro de la Capa Gratuita de AWS [cite: 2026-02-01].
 
 ---
 
@@ -38,44 +33,7 @@ Toda la infraestructura se gestiona como código, lo que permite despliegues pre
 
 ## Arquitectura del Sistema
 
-┌─────────────────────────────┐      ┌──────────────────────────────────────────┐
-│      WORKSTATION (Local)    │      │           GITHUB ECOSYSTEM               │
-│   (EC2 CloudManager)        │      │                                          │
-│                             │      │   ┌───────────────┐   ┌──────────────┐   │
-│   $ terraform apply         │──────┼──▶│  Repository   │──▶│   Actions    │   │
-│   $ git push origin main    │      │   │ (Source Code) │   │ (CI/CD Work) │   │
-│                             │      │   └───────────────┘   └───────┬──────┘   │
-└─────────────────────────────┘      │           ▲                   │          │
-                                     │           │    ┌──────────────▼──────┐   │
-                                     │           └────┤   GitHub Secrets    │   │
-                                     │                │ (AWS_ACCESS_KEYS)   │   │
-                                     └────────────────└─────────────────────┘───┘
-                                                                     │
-                                     Deploy & Sync with Remote State │
-                                                                     ▼
-┌───────────────────────────────────────────────────────────────────────────────┐
-│                                  AWS CLOUD                                    │
-│                                                                               │
-│   ┌──────────────────────┐          ┌─────────────────────────────────────┐   │
-│   │   STATE MANAGEMENT   │          │         VPC & NETWORKING            │   │
-│   │  (S3: Remote State)  │◀─────────┼──────┐                              │   │
-│   │ [Locking & Version]  │          │      │      ┌───────────────────┐   │   │
-│   └──────────────────────┘          │      │      │  Security Group   │   │   │
-│                                     │      │      │  (Allow 80, 22)   │   │   │
-│   ┌──────────────────────┐          │      │      └─────────┬─────────┘   │   │
-│   │   ASSETS & LOGS      │          │      │                │             │   │
-│   │  (S3: Portfolio)     │◀─────────┼──────┼──────┐         ▼             │   │
-│   │ [Static Content]     │          │      │      ┌───────────────────┐   │   │
-│   └──────────────────────┘          │      │      │    EC2 INSTANCE   │   │   │
-│               ▲                     │      └─────▶│   (Nginx Server)  │   │   │
-│               │                     │             └─────────┬─────────┘   │   │
-│               └─────────────────────┼───────────────────────┘             │   │
-│                (IAM Role Access)    │                       │             │   │
-│                                     │             ┌─────────▼─────────┐   │   │
-│                                     │             │  AWS CloudWatch   │   │   │
-│                                     │             │ (Metrics & Logs)  │   │   │
-│                                     │             └───────────────────┘   │   │
-└─────────────────────────────────────┴─────────────────────────────────────┘
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/72a73190-10aa-4ec3-9f3f-6c194b5f2596" />
 
 
 ### Arquitectura Técnica Detallada
@@ -100,7 +58,52 @@ Toda la infraestructura se gestiona como código, lo que permite despliegues pre
 
 Para replicar este proyecto, se han seguido los siguientes pasos técnicos desde la terminal de control (**CloudManager**):
 
-#### Paso 1: Inicialización del Entorno
-Prepara el directorio y descarga los proveedores necesarios de AWS.
-```bash
-terraform init
+
+### 1. Inicialización y Configuración
+Prepara el directorio de trabajo y establece la conexión con el backend remoto.
+* **Comando:** `terraform init`
+* **Objetivo:** Descarga los proveedores de AWS y sincroniza el estado con el **Bucket S3**.
+
+---
+
+### 2. Validación de Infraestructura
+Asegura que el código cumple con los estándares de sintaxis de HCL.
+* **Comando:** `terraform validate`
+* **Objetivo:** Detectar errores de configuración antes de la fase de planificación.
+
+---
+
+### 3. Planificación Estratégica (FinOps)
+Auditoría de los recursos que se van a aprovisionar para evitar cargos inesperados.
+* **Comando:** `terraform plan`
+* **Objetivo:** Previsualizar cambios en **EC2, VPC y S3** garantizando que se mantienen dentro de la **Capa Gratuita**.
+
+---
+
+### 4. Ejecución del Despliegue (IaC)
+Aprovisionamiento real de la arquitectura en la nube de AWS.
+* **Comando:** `terraform apply -auto-approve`
+* **Objetivo:** Levantar el servidor **Nginx**, configurar los **Security Groups** (Puertos 80, 22) y asignar el **IAM Role** correspondiente.
+
+---
+
+### 5. Automatización de Cambios (CI/CD)
+Ciclo de vida GitOps para la actualización continua del portfolio.
+ **Comandos:**
+* git add .
+* git commit -m "feat: actualización de infraestructura"
+*  git push origin main
+
+---
+
+### Roadmap de futuras mejoras:
+*  Implementación de **SSL/TLS** mediante AWS Certificate Manager (ACM).
+*  Configuración de una base de datos **Amazon RDS** (Free Tier).
+*  Migración de la carga de trabajo a **Amazon ECS (Fargate)** para contenedores.
+
+---
+
+##  Licencia
+Este proyecto está bajo la Licencia **MIT**.
+
+

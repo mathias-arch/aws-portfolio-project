@@ -104,6 +104,9 @@ Ciclo de vida GitOps para la actualización continua del portfolio.
 ---
 
 ##  Licencia
-Este proyecto está bajo la Licencia **MIT**.
+
+Este proyecto está bajo la **Licencia MIT**. Puedes consultar los términos legales en el siguiente enlace:
+
+ [Consultar Licencia MIT del Proyecto](./LICENSE)
 
 

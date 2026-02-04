@@ -1,6 +1,4 @@
 name: "Terraform Destroy"
-
-# Esto permite que el botón aparezca manualmente en GitHub
 on:
   workflow_dispatch:
 

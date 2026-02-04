@@ -1,9 +1,8 @@
 name: "Terraform AWS Deployment"
-
 on:
   push:
-    branches:
-      - main  # O el nombre de tu rama principal
+    branches: [ main ]
+  workflow_dispatch:   
 
 jobs:
   terraform:

@@ -13,21 +13,20 @@ Este proyecto representa el despliegue de una arquitectura web profesional en **
 La solución utiliza **Terraform** para definir los recursos y **GitHub Actions** para el despliegue continuo (CD), garantizando que la infraestructura sea replicable, auditable y eficiente en costes.
 
 ---
-## Índice
-* [Descripción del Proyecto](#-descripción-del-proyecto)
-* [Objetivos del Proyecto](#-objetivos-del-proyecto)
-* [Tecnologías Utilizadas](#-tecnologías-utilizadas)
-* [Arquitectura del Sistema](#-arquitectura-del-sistema)
-* [Desafíos Técnicos y Soluciones](#-desafíos-técnicos-y-soluciones)
-* [Conclusiones y Aprendizajes](#-conclusiones-y-aprendizajes)
-
----
 
 ## Objetivos del Proyecto
 * [x] **Automatización Total:** Despliegue de infraestructura mediante Terraform CLI.
 * [x] **Seguridad Granular:** Implementación de roles de IAM para eliminar el uso de Access Keys.
 * [x] **Gestión de Redes:** Configuración de Security Groups para acceso HTTP seguro (Puerto 80).
 * [x] **Control de Versiones:** Aplicación de mejores prácticas de Git, incluyendo filtrado de datos sensibles vía `.gitignore`.
+
+---
+
+## Tecnologías Utilizadas
+* **Cloud:** AWS (EC2, S3, IAM, VPC, CloudWatch)
+* **IaC:** Terraform
+* **CI/CD:** GitHub Actions
+* **Servidor:** Nginx
 
 ---
 
@@ -92,14 +91,15 @@ Ciclo de vida GitOps para la actualización continua del portfolio.
  **Comandos:**
 * git add .
 * git commit -m "feat: actualización de infraestructura"
-*  git push origin main
+* git push origin main
 
 ---
 
+
 ### Roadmap de futuras mejoras:
-*  Implementación de **SSL/TLS** mediante AWS Certificate Manager (ACM).
-*  Configuración de una base de datos **Amazon RDS** (Free Tier).
-*  Migración de la carga de trabajo a **Amazon ECS (Fargate)** para contenedores.
+* Implementación de **SSL/TLS** mediante AWS Certificate Manager (ACM).
+* Configuración de una base de datos **Amazon RDS** (Free Tier).
+* Migración de la carga de trabajo a **Amazon ECS (Fargate)** para contenedores.
 
 ---
 

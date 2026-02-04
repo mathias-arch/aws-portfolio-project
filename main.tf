@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "mi-portfolio-state-storage-unique" # El nombre que creaste arriba
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
 provider "aws" {
   region = "us-east-1" 
 }
